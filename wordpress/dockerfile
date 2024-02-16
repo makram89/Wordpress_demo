@@ -1,6 +1,10 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
+
+COPY ./WordPress /var/www/html/
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +rwx /entrypoint.sh 
 
 RUN apt-get update -q && \
     apt-get install -q -y  php php-cli php-fpm php-mysql apache2 libapache2-mod-php openssl
@@ -9,11 +13,6 @@ RUN apt-get update -q && \
 RUN a2enmod rewrite && \
     a2enmod ssl && \
     a2ensite default-ssl
-
-COPY ./WordPress /var/www/html/
-COPY ./configure.sh /configure.sh
-
-RUN chmod +rwx /configure.sh 
 
 # Generate SSL certificate
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \

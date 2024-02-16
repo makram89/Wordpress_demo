@@ -1,0 +1,27 @@
+FROM ubuntu:22.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV MYSQL_VERSION='8.0'
+
+# Creater user and group for MYSQL
+RUN groupadd -r mysql && useradd -r -g mysql mysql
+
+# Set the home directory for the mysql user
+RUN usermod -d /var/lib/mysql mysql
+
+RUN apt-get update -q && apt-get install -q -y mysql-server-$MYSQL_VERSION  && rm -rf /var/lib/apt/lists/*
+
+# Copy entrypoint script and grant execute right
+COPY ./mysql_entrypoint.sh /mysql_entrypoint.sh
+RUN chmod +x /mysql_entrypoint.sh
+
+VOLUME /var/lib/mysql
+
+# Expose MySQL default port
+EXPOSE 3306
+
+ENTRYPOINT ["/mysql_entrypoint.sh"]
+
+CMD ["mysqld"]
+# CMD ["tail", "-f", "/dev/null"]
+

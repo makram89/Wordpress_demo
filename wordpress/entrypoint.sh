@@ -14,7 +14,7 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
     # cp wp-config-docker.php wp-config.php
     rm -f /var/www/html/wp-config-sample.php
-
+    rm -f /var/www/html/index.html
 fi
 
 exec $@
