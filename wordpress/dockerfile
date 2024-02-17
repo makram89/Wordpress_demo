@@ -3,10 +3,6 @@ FROM ubuntu:20.04
 # Make instation noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Copy WP and configuration script
-COPY ./WordPress /var/www/html/
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +rwx /entrypoint.sh 
 
 # Install necesery packages
 RUN apt-get update -q && \
@@ -22,6 +18,11 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/apache-selfsigned.key \
     -out /etc/ssl/certs/apache-selfsigned.crt \
     -subj "/C=PL/ST=Wielkopolska/L=Poznan/O=MK/CN=localhost"
+
+# Copy WP and configuration script
+COPY ./WordPress /var/www/html/
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +rwx /entrypoint.sh 
 
 
 # Expose ports for HTTP and HTTPS
