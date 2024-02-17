@@ -1,15 +1,18 @@
 FROM ubuntu:20.04
 
+# Make instation noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Copy WP and configuration script
 COPY ./WordPress /var/www/html/
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +rwx /entrypoint.sh 
 
+# Install necesery packages
 RUN apt-get update -q && \
     apt-get install -q -y  php php-cli php-fpm php-mysql apache2 libapache2-mod-php openssl
 
-# Enable required Apache modules
+# Enable Apache modules 
 RUN a2enmod rewrite && \
     a2enmod ssl && \
     a2ensite default-ssl
@@ -18,12 +21,14 @@ RUN a2enmod rewrite && \
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/apache-selfsigned.key \
     -out /etc/ssl/certs/apache-selfsigned.crt \
-    -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost"
+    -subj "/C=PL/ST=Wielkopolska/L=Poznan/O=MK/CN=localhost"
 
 
 # Expose ports for HTTP and HTTPS
 EXPOSE 80 443
 
+# Runing entrypoint
 ENTRYPOINT [ "/entrypoint.sh" ]
 
+# Starting main process
 CMD ["apache2ctl", "-D", "FOREGROUND"]

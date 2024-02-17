@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    # image: mysql:8.0
+    # image: makram89/mysql-demo:latest
     build: ./mysql
     volumes:
       - db_data:/var/lib/mysql
@@ -22,7 +22,6 @@ services:
       - db
     # image: makram89/demo-wp:latest
     build: ./wordpress
-    # image: demo-wp
     ports:
       - 8000:80
       - 443:443
