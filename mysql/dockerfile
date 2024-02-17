@@ -5,6 +5,7 @@ ARG MYSQL_VERSION='8.0'
 
 # Create user and group for MYSQL
 RUN groupadd -r mysql && useradd -r -g mysql mysql
+RUN usermod -d /var/lib/mysql mysql
 
 # Install requierd packages
 RUN apt-get update -q && apt-get install -q -y mysql-server-$MYSQL_VERSION  && rm -rf /var/lib/apt/lists/*
@@ -17,8 +18,7 @@ COPY ./config/my.cnf /etc/mysql/my.cnf
 
 # Grant priviliges
 RUN chmod +x /mysql_entrypoint.sh
-RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
-    && chmod 1777 /var/run/mysqld /var/lib/mysql
+RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && chmod 1777 /var/run/mysqld /var/lib/mysql
 
 # Data persistence 
 VOLUME /var/lib/mysql
@@ -27,8 +27,4 @@ VOLUME /var/lib/mysql
 EXPOSE 3306
 
 ENTRYPOINT ["/mysql_entrypoint.sh"]
-
-# Run mysqld as mysql
-USER mysql
-CMD ["mysqld"]
 

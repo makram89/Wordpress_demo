@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # exec service mysql start
-mysqld_safe &
+mysqld_safe & 
 MYSQL_PID=$!
 
 # Initilalization flag
 INITIALIZED_FLAG="/var/lib/mysql/initialized.flag"
 
-# Wait for MySQL to be ready
-until mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "SELECT 1"; do
-   echo "Await mysql"
-   sleep 2
-done
-
 # Check for flag and if not set configure DB for WP
 if [ ! -f "$INITIALIZED_FLAG" ]; then
+
+    # Wait for MySQL to be ready
+    until mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "SELECT 1"; do
+        echo "Await mysql"
+        sleep 2
+    done
 
     # Set up root password
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PASSWORD}';"
@@ -28,11 +28,6 @@ if [ ! -f "$INITIALIZED_FLAG" ]; then
     # Flag after init
     touch "$INITIALIZED_FLAG"
 
-    
 fi
 
-# Kill base here to run it as mysql in CMD 
-mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
-
-# End script
-exec "$@"
+wait $MYSQL_PID

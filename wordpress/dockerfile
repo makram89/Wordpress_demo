@@ -3,7 +3,6 @@ FROM ubuntu:20.04
 # Make instation noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 
-
 # Install necesery packages
 RUN apt-get update -q && \
     apt-get install -q -y  php php-cli php-fpm php-mysql apache2 libapache2-mod-php openssl
@@ -23,7 +22,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 COPY ./WordPress /var/www/html/
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +rwx /entrypoint.sh 
-
 
 # Expose ports for HTTP and HTTPS
 EXPOSE 80 443

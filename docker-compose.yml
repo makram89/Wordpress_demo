@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   db:
-    # image: makram89/mysql-demo:latest
     build: ./mysql
     volumes:
       - db_data:/var/lib/mysql
@@ -20,7 +19,6 @@ services:
   wordpress:
     depends_on:
       - db
-    # image: makram89/demo-wp:latest
     build: ./wordpress
     ports:
       - 8000:80
