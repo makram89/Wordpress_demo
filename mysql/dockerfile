@@ -15,7 +15,11 @@ RUN apt-get update -q && apt-get install -q -y mysql-server-$MYSQL_VERSION  && r
 COPY ./mysql_entrypoint.sh /mysql_entrypoint.sh
 RUN chmod +x /mysql_entrypoint.sh
 
+COPY ./config/my.cnf /etc/mysql/my.cnf
+
 VOLUME /var/lib/mysql
+
+RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && chmod 1777 /var/run/mysqld /var/lib/mysql
 
 # Expose MySQL default port
 EXPOSE 3306
