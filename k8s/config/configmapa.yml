@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-config
+data:
+  MYSQL_DATABASE: wordpress
+  MYSQL_USER: dawid
+  WORDPRESS_DB_HOST: mysql
